@@ -16,11 +16,11 @@ def conta_inversoes(lista):
 
 
 
-ns = np.linspace(10, 100, 10, dtype=int)
+ns = np.linspace(10, 1000, 100, dtype=int)
 ts = [timeit.timeit('conta_inversoes(lst)', 
                     setup='lst=list(range({}))'.format(n),
                     globals=globals(),
-                    number=1000)
+                    number=100)
       for n in ns]
 
 plt.plot(ns, ts, 'or')

@@ -35,4 +35,16 @@ p = np.poly1d(coeffs)
 plt.plot(ns, ts,'or')
 plt.plot(ns, [p(n)for n in ns],'-b')
 
+
+# y = x
+# vertically stretched 20x
+# horizontally compressed 1x
+ns = range(1, 10)
+ts = [n*20 for n in ns]
+degree = 4
+coeffs = np.polyfit(ns, ts, degree)
+p = np.poly1d(coeffs)
+plt.plot(ns, ts,'or')
+plt.plot(ns, [p(n)for n in ns],'-b')
+
 plt.show()
