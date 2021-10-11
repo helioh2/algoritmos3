@@ -19,7 +19,7 @@ assert busca_sequencial([2,4,6,8],2) == 0  # lista[0] == 2
 def busca_sequencial(lista, valor):
     n = len(lista)        # O(1)
     for i in range(0, n):  # n+1 = O(n)
-        if lista[i] == valor:  # O(n)
+        if lista[i] == valor:  # O(1)*n = O(n)
             return i    # 0
     return -1  # O(1)
 
@@ -36,3 +36,31 @@ def busca_sequencial(lista, valor):
     return -1  # 0
 
 # Caso médio: O(1) + O(n) + O(n) +  O(1) = O(n)
+
+
+
+
+if lista[i] == valor:  # O(1)
+    for ... (n):
+        for .. (n):   # O(n^2)
+            ...
+else:
+    for... (n):      # O(n)
+        ...
+
+## O(1) + O(n^2) = O(n^2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## O(1)*n
