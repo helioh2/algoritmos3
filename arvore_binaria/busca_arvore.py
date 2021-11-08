@@ -60,6 +60,33 @@ def print_emordem(raiz: Node):
 
     if raiz.dir:
         print_emordem(raiz.dir)
+
+
+def alguma_coisa_emordem(raiz: Node):
+    if raiz.esq:
+        alguma_coisa_emordem(raiz.esq)
+
+    # VISITANDO
+    alguma_coisa(raiz.conteudo)
+
+    if raiz.dir:
+        alguma_coisa_emordem(raiz.dir)
+
+
+
+
+
+
+def multiplicar_por_dois_emordem(raiz: Node):
+    
+    if raiz.esq:
+        multiplicar_por_dois_emordem(raiz.esq)
+
+    raiz.conteudo = raiz.conteudo*2
+
+    if raiz.dir:
+        multiplicar_por_dois_emordem(raiz.dir)
+
         
 def print_posordem(raiz: Node):
     if raiz.esq:
