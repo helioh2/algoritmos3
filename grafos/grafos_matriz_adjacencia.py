@@ -11,6 +11,7 @@ from typing import Tuple
 class Grafo:
 
     def __init__(self, vertices:list, arestas:Tuple[object,object,int]) -> None:
+        
         self.vertices = sorted(vertices)
         self.matriz = [[None for _ in range(len(vertices))] for _ in range(len(vertices))]
         
@@ -25,3 +26,13 @@ arestas = [("A","B",1), ("A","C",1), ("B","C",1), ("C","A",1)]
 grafo1 = Grafo(vertices, arestas)
 
 print(grafo1.matriz)
+
+
+def vizinhanca(grafo: Grafo, v1):
+    ''' Exercício'''
+    pass
+
+def sao_vizinhos(grafo: Grafo, v1, v2):
+    ''' Exercicio'''
+    pass
+

@@ -128,6 +128,16 @@ def ordenacao_topologica(grafo):
 
     visitados = set()
     ordem_topologica = {v: 0 for v in grafo.keys()}
+    '''
+    Ex ordem_topologica
+    A -> 0
+    B -> 0
+    C -> 0
+    D -> 0
+    E -> 0
+    F -> 0
+    G -> 0
+    '''
     tempo = 0
 
     def busca_profundidade(grafo, v_inicial, visitados):
@@ -149,7 +159,11 @@ def ordenacao_topologica(grafo):
         if not vertice in visitados:
             busca_profundidade(grafo, vertice, visitados)
 
+
     return {v: abs(t-len(grafo)) for v,t in ordem_topologica.items()} # reverte ordem
+    ## se os vertices fossem numeros de 0..len(grafo) e ordem_topologica fosse uma lista
+    ## return ordem_topologica.reverted
+    
 
 grafo_aciclico = {
     "A": ["B","C"],
@@ -185,24 +199,68 @@ print("Execução da busca em largura:")
 busca_largura_nao_rec_fila(grafo_aciclico, "A")
 
 
-def dikjstra(grafo, v_inicial):
-    visitados, fila = [], [v_inicial]
+def busca_menor_distancia_e_nao_visitado(grafo, distancia, visitado):
 
-    while fila:
-        vertice = fila.pop(0)
-        if vertice not in visitados:
-            visitados.append(vertice)
-            fila += [x for x in grafo[vertice] if x not in visitados]
-    return visitados
+    menor = None
+    primeiro = True
+    for v in grafo:
+        if distancia[v] >= 0 and not visitado[v]:
+            if primeiro:
+                menor = v
+                primeiro = False
+            elif distancia[menor] > distancia[v]:
+                menor = v
+    return menor
 
-# print(busca_largura(grafo1, "C"))
 
+INF = float('inf')
 
-def existe_caminho_entre(grafo, v1, v2):
-    pass
+def menor_caminho(grafo, v_inicial):
 
-def eh_conexo(grafo):
-    pass
+    visitado = {v: False for v in grafo} # cria relação de visitado (True ou False) para cada vértice
+    cont_nao_visitados = len(grafo.keys()) # contagem de não visitados inicialmente como número total de vértices
+    distancia = {v: INF for v in grafo} # cria relação de distância inicial (INF) para cada vértice
+    anterior = {v: None for v in grafo} # cria relação de anterior inicial (None) para cada vértice
+    
+    distancia[v_inicial] = 0
+
+    while cont_nao_visitados > 0:
+
+        menor_v = busca_menor_distancia_e_nao_visitado(grafo, distancia, visitado)
+
+        if menor_v is None:
+            break
+
+        visitado[menor_v] = True
+        cont_nao_visitados -= 1
+
+        for vizinho in vizinhanca(grafo, menor_v):  # para cada vizinho do menor
+            if (distancia[menor_v] + 1 < distancia[vizinho]): 
+                # Se ninguém chegou ainda no vizinho ou a distância do vizinho 
+                # é maior que a distancia do menor_v incrementado
+                # Ou peso da aresta:
+                # elif  distancia[vizinho] > distancia[menor_v] + peso(menor_v, vizinho):   
+                
+                distancia[vizinho] = distancia[menor_v] + 1
+                # ou peso da aresta: 
+                # distancia[vizinho] = distancia[menor_v] + peso(menor_v, vizinho)
+                anterior[vizinho] = menor_v
+
+    return distancia, anterior
+
+print("\nTestes menor caminho:")
+grafo_com_pesos = {
+    0: [1],
+    1: [2, 3],
+    2: [4],
+    3: [0, 5],
+    4: [1],
+    5: []
+}
+
+# print(menor_caminho(grafo1, "A"))
+print(menor_caminho(grafo_com_pesos, 0))
+
 
 '''
 Estrututa de grafos *ponderados* como lista de adjacência
@@ -212,19 +270,76 @@ A -> [(B,20),(C,60)] #significado: aresta entre A e B tem peso 20, e aresta entr
 B -> [(C,60)]
 C -> [(A,15)]
 '''
-grafo2 = {
+grafo_com_pesos = {
     "A": [("B",20), ("C",60)],
     "B": [("C",15)],
     "C": [("A",60)]
 }
 
+def peso(grafo, v1, v2):
+    
+    for i in range(len(grafo[v1])):
+        if grafo[v1][i][0] == v2: #achei a aresta entre v1 e v2
+            return grafo[v1][i][1]
+    return None
 
-vertices_ligados_a_A = grafo2["A"]
-primeira_aresta = vertices_ligados_a_A[0]
-vertice_da_primeira_aresta = primeira_aresta[0]
-peso_da_primeira_aresta = primeira_aresta[1]
-print(vertice_da_primeira_aresta)
-print(peso_da_primeira_aresta)
+assert peso(grafo_com_pesos, "A", "C") == 60
+assert peso(grafo_com_pesos, "B", "C") == 15
 
-def menor_caminho_entre(grafo, v1, v2):
-    pass
+      
+
+INF = float('inf')
+
+def vizinhanca_ponderada(grafo, v1):
+    # result = []
+    # for item in grafo[v1]:
+    #     result.append(item[0])
+    # return result
+    return [v for (v,p) in grafo[v1]]
+
+
+def menor_caminho_com_pesos(grafo, v_inicial):  ## Algoritmo de Dijkstra
+
+    visitado = {v: False for v in grafo} # cria relação de visitado (True ou False) para cada vértice
+    cont_nao_visitados = len(grafo.keys()) # contagem de não visitados inicialmente como número total de vértices
+    distancia = {v: INF for v in grafo} # cria relação de distância inicial (INF) para cada vértice
+
+    anterior = {v: None for v in grafo} # cria relação de anterior inicial (None) para cada vértice
+    
+    distancia[v_inicial] = 0
+
+    while cont_nao_visitados > 0:
+
+        menor_v = busca_menor_distancia_e_nao_visitado(grafo, distancia, visitado)
+
+        if menor_v is None:
+            break
+
+        visitado[menor_v] = True
+        cont_nao_visitados -= 1
+
+        for vizinho in vizinhanca_ponderada(grafo, menor_v):  # para cada vizinho do menor
+            if (distancia[menor_v] + peso(grafo, menor_v, vizinho) < distancia[vizinho]): 
+                # Se ninguém chegou ainda no vizinho ou a distância do vizinho 
+                # é maior que a distancia do menor_v incrementado
+                # Ou peso da aresta:
+                # elif  distancia[vizinho] > distancia[menor_v] + peso(menor_v, vizinho):   
+                
+                distancia[vizinho] = distancia[menor_v] + peso(grafo, menor_v, vizinho)
+                # ou peso da aresta: 
+                # distancia[vizinho] = distancia[menor_v] + peso(menor_v, vizinho)
+                anterior[vizinho] = menor_v
+
+    return distancia, anterior
+
+
+print(vizinhanca_ponderada(grafo_com_pesos, "A"))
+
+print(menor_caminho_com_pesos(grafo_com_pesos, "A"))
+
+# vertices_ligados_a_A = grafo2["A"]
+# primeira_aresta = vertices_ligados_a_A[0]
+# vertice_da_primeira_aresta = primeira_aresta[0]
+# peso_da_primeira_aresta = primeira_aresta[1]
+# print(vertice_da_primeira_aresta)
+# print(peso_da_primeira_aresta)
